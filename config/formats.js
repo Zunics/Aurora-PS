@@ -196,10 +196,7 @@ exports.Formats = [
 			battle: 3,
 		},
 		ruleset: ['Pokemon', 'Standard GBU', 'Team Preview', 'Inverse Mod'],
-<<<<<<< HEAD
-=======
 		requirePentagon: true,
->>>>>>> ae5b135dbe8f9c567b4104a00016b19e162f8fd1
 	},
 	{
 		name: "[Gen 7] Custom Game",
