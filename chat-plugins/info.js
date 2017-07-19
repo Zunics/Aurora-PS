@@ -321,10 +321,10 @@ exports.commands = {
 			return this.errorReply(`Both users must be in this room.`);
 		}
 		let challenges = [];
-		if (user1.challengeTo && user1.challengeTo.to === user2.userid) {
+		if (user1.challengeTo && Users.get(user1.challengeTo.to) === user2) {
 			challenges.push(Chat.html`${user1.name} is challenging ${user2.name} in ${Dex.getFormat(user1.challengeTo.format).name}.`);
 		}
-		if (user2.challengeTo && user2.challengeTo.to === user1.userid) {
+		if (user2.challengeTo && Users.get(user2.challengeTo.to) === user1) {
 			challenges.push(Chat.html`${user2.name} is challenging ${user1.name} in ${Dex.getFormat(user2.challengeTo.format).name}.`);
 		}
 		if (!challenges.length) {
@@ -1222,7 +1222,7 @@ exports.commands = {
 			this.sendReplyBox(
 				"Have a replay showcasing a bug on Pok&eacute;mon Showdown?<br />" +
 				"- <a href=\"https://www.smogon.com/forums/threads/3520646/\">Questions</a><br />" +
-				"- <a href=\"https://www.smogon.com/forums/threads/3469932/\">Bug Reports</a>"
+				"- <a href=\"https://www.smogon.com/forums/threads/3469932/\">Bug Reports</a> (ask in <a href=\"/help\">Help</a> before posting in the thread if you're unsure)"
 			);
 		}
 	},

@@ -2186,7 +2186,9 @@ exports.commands = {
 	},
 	unnamelockhelp: ["/unnamelock [username] - Unnamelocks the user. Requires: % @ * & ~"],
 
-	hidetext: function (target, room, user) {
+	hidetextalts: 'hidetext',
+	hidealtstext: 'hidetext',
+	hidetext: function (target, room, user, connection, cmd) {
 		if (!target) return this.parse('/help hidetext');
 
 		this.splitTarget(target);
@@ -2203,11 +2205,27 @@ exports.commands = {
 			return this.errorReply("User '" + name + "' is not banned from this room or locked.");
 		}
 
-		this.addModCommand("" + targetUser.name + "'s messages were cleared from  " + room.title + " by " + user.name + ".");
-		this.add('|unlink|' + hidetype + userid);
-		if (userid !== toId(this.inputUsername)) this.add('|unlink|' + hidetype + toId(this.inputUsername));
+		if (cmd === 'hidealtstext' || cmd === 'hidetextalts') {
+			this.addModCommand(`${targetUser.name}'s alts' messages were cleared from ${room.title} by ${user.name}.`);
+			this.add(`|unlink|${hidetype}${userid}`);
+
+			const alts = targetUser.getAltUsers(true);
+			for (let i = 0; i < alts.length; ++i) {
+				this.add(`|unlink|${hidetype}${alts[i].name}`);
+			}
+			for (let i in targetUser.prevNames) {
+				this.add(`|unlink|${hidetype}${targetUser.prevNames[i]}`);
+			}
+		} else {
+			this.addModCommand("" + targetUser.name + "'s messages were cleared from  " + room.title + " by " + user.name + ".");
+			this.add('|unlink|' + hidetype + userid);
+			if (userid !== toId(this.inputUsername)) this.add('|unlink|' + hidetype + toId(this.inputUsername));
+		}
 	},
-	hidetexthelp: ["/hidetext [username] - Removes a locked or banned user's messages from chat (includes users banned from the room). Requires: % (global only), @ * # & ~"],
+	hidetexthelp: [
+		"/hidetext [username] - Removes a locked or banned user's messages from chat (includes users banned from the room). Requires: % (global only), @ * # & ~",
+		"/hidealtstext OR /hidetextalts [username] - Removes a locked or banned user's messages, and their alternate account's messages from the chat (includes users banned from the room).  Requires: % (global only), @ * # & ~",
+	],
 
 	ab: 'blacklist',
 	blacklist: function (target, room, user) {
@@ -3466,7 +3484,7 @@ exports.commands = {
 		} else if (!target) {
 			this.sendReply("COMMANDS: /msg, /reply, /logout, /challenge, /search, /rating, /whois");
 			this.sendReply("OPTION COMMANDS: /nick, /avatar, /ignore, /away, /back, /timestamps, /highlight");
-			this.sendReply("INFORMATIONAL COMMANDS: /data, /dexsearch, /movesearch, /groups, /faq, /rules, /intro, /formatshelp, /othermetas, /learn, /analysis, /calc (replace / with ! to broadcast. Broadcasting requires: + % @ * # & ~)");
+			this.sendReply("INFORMATIONAL COMMANDS: /data, /dexsearch, /movesearch, /itemsearch, /groups, /faq, /rules, /intro, /formatshelp, /othermetas, /learn, /analysis, /calc (replace / with ! to broadcast. Broadcasting requires: + % @ * # & ~)");
 			if (user.group !== Config.groupsranking[0]) {
 				this.sendReply("DRIVER COMMANDS: /warn, /mute, /hourmute, /unmute, /alts, /forcerename, /modlog, /modnote, /lock, /unlock, /announce, /redirect");
 				this.sendReply("MODERATOR COMMANDS: /ban, /unban, /ip, /modchat");

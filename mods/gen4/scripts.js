@@ -102,7 +102,7 @@ exports.BattleScripts = {
 			template = this.getTemplate('unown');
 
 			let err = new Error('Template incompatible with random battles: ' + species);
-			require('../crashlogger')(err, 'The gen 4 randbat set generator');
+			require('../../crashlogger')(err, 'The gen 4 randbat set generator');
 		}
 
 		if (template.battleOnly) species = template.baseSpecies;
@@ -231,7 +231,7 @@ exports.BattleScripts = {
 
 				// Bad after setup
 				case 'explosion': case 'selfdestruct':
-					if (counter.stab < 2 || counter.setupType || !!counter['recovery'] || hasMove['rest']) rejected = true;
+					if (counter.stab < 2 || counter.setupType || !!counter['recovery'] || hasMove['rest'] || hasMove['substitute']) rejected = true;
 					break;
 				case 'foresight': case 'protect': case 'roar':
 					if (counter.setupType && !hasAbility['Speed Boost']) rejected = true;
